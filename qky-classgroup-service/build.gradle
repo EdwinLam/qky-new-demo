@@ -1,0 +1,35 @@
+archivesBaseName = 'qky-classgroup-service'
+
+
+dependencies {
+    // spring boot
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile('org.springframework.boot:spring-boot-starter-data-elasticsearch')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+
+    runtime('mysql:mysql-connector-java')
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+
+    // 数据库连接池
+    compile('com.alibaba:druid:1.1.4')
+    // MybatisPlus
+    compile('com.baomidou:mybatis-plus-boot-starter:2.2.0')
+    compile project(':qky-classgroup-domain')
+    compile('cn.hutool:hutool-all:4.0.5')
+    compile('com.google.code.gson:gson:2.8.2')
+    compile('io.jsonwebtoken:jjwt:0.9.0')
+    compile 'org.codehaus.janino:janino:3.0.9'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.7'
+    compile "org.bouncycastle:bctsp-jdk15:1.46"
+    compile 'commons-codec:commons-codec:1.9'
+    compile 'org.codehaus.jackson:jackson-xc:1.9.9'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.3.4.RELEASE'
+
+
+}
+

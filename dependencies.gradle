@@ -1,0 +1,14 @@
+configure(allprojects) { project ->
+    ext.springBootVersion = "2.0.3.RELEASE"
+    ext.thinkjoyCommonVersion = "0.1.29-SNAPSHOT"
+    ext.thinkjoyCloudstackVersion = "0.0.32-SNAPSHOT"
+    ext.springTestVersion = "4.1.0.RELEASE"
+    ext.mysqlConnectorVersion = "5.1.26"
+    ext.dubboVersion = "2.5.3"
+    ext.dubboZKClientVersion = "0.4"
+    ext.freemarkerVersion = "2.3.20"
+    ext.ucmVersion = "0.1.4-SNAPSHOT"
+    ext.ucenterVersion = "0.0.186-SNAPSHOT"
+    ext.qkyVersion = "0.0.12-SNAPSHOT"
+    ext.qkyAuthVersion = "0.0.3-SNAPSHOT"
+}

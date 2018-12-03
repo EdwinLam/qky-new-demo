@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.qky.classgroup.dao.user.IUserRelDAO">
+    <!-- 在这里存放用户自定义的映射配置（注：UserRelDAO.xml里各节点的ID不能在这里重复出现）  -->
+    <!--获取分组用户-->
+    <select id="fetchGroupRelUser" parameterType="java.util.Map"
+            resultType="cn.thinkjoy.qky.classgroup.domain.bas.BasUser">
+		SELECT
+			basUser.id,
+			basUser.openid,
+			basUser.unionid,
+			basUser.nickName,
+			basUser.avatarUrl,
+			basUser.gender,
+			basUser.city,
+			basUser.province,
+			basUser.country,
+			basUser.phoneNumber,
+			basUser.purePhoneNumber,
+			basUser.countryCode,
+			basUser.creator,
+			basUser.createDate,
+			basUser.lastModifier,
+			basUser.lastModDate,
+			basUser.status,
+			userRel.nickName groupNickName,
+		FROM
+			bas_user basUser
+			INNER JOIN group_user_rel userRel ON userRel.STATUS = 0
+			AND userRel.userId = basUser.id
+			AND userRel.groupId = #{groupId}
+			AND userRel.userStatus = 1
+		WHERE
+			basUser.STATUS = 0
+	</select>
+</mapper>

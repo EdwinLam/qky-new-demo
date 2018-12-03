@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.qky.classgroup.dao.biz.IBizMessageDAO">
+
+    <sql id="Base_Column_List">
+        id,
+        groupId,
+        sourceId,
+        sourceCode,
+        messageTitle,
+        messageContent,
+        creatorName,
+        creator,
+        createDate,
+        lastModifier,
+        lastModDate,
+        status
+    </sql>
+    <insert id="insert" parameterType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        INSERT INTO biz_message (
+        groupId
+        ,sourceId
+        ,sourceCode
+        ,messageTitle
+        ,messageContent
+        ,creatorName
+        ,creator
+        ,createDate
+        ,lastModifier
+        ,lastModDate
+        ,status
+        ) VALUES (
+        #{groupId}
+        ,#{sourceId}
+        ,#{sourceCode}
+        ,#{messageTitle}
+        ,#{messageContent}
+        ,#{creatorName}
+        ,#{creator}
+        ,#{createDate}
+        ,#{lastModifier}
+        ,#{lastModDate}
+        ,#{status}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <insert id="insertMap">
+        INSERT INTO biz_message (
+		    groupId
+		    ,sourceId
+		    ,sourceCode
+		    ,messageTitle
+		    ,messageContent
+		    ,creatorName
+		    ,creator
+		    ,createDate
+		    ,lastModifier
+		    ,lastModDate
+		    ,status
+        ) VALUES (
+		    	#{map.groupId}
+		    	,#{map.sourceId}
+		    	,#{map.sourceCode}
+		    	,#{map.messageTitle}
+		    	,#{map.messageContent}
+		    	,#{map.creatorName}
+		    	,#{map.creator}
+		    	,#{map.createDate}
+		    	,#{map.lastModifier}
+		    	,#{map.lastModDate}
+		    	,#{map.status}
+        )
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO biz_message (
+        groupId
+        ,sourceId
+        ,sourceCode
+        ,messageTitle
+        ,messageContent
+        ,creatorName
+        ,creator
+        ,createDate
+        ,lastModifier
+        ,lastModDate
+        ,status
+        ) VALUES
+        <foreach collection="insertList" item="item" separator=",">
+            (
+            #{item.groupId}
+            ,#{item.sourceId}
+            ,#{item.sourceCode}
+            ,#{item.messageTitle}
+            ,#{item.messageContent}
+            ,#{item.creatorName}
+            ,#{item.creator}
+            ,#{item.createDate}
+            ,#{item.lastModifier}
+            ,#{item.lastModDate}
+            ,#{item.status}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        UPDATE biz_message
+        <trim prefix="SET" suffixOverrides=",">
+            groupId=#{groupId},
+            sourceId=#{sourceId},
+            sourceCode=#{sourceCode},
+            messageTitle=#{messageTitle},
+            messageContent=#{messageContent},
+            creatorName=#{creatorName},
+            creator=#{creator},
+            createDate=#{createDate},
+            lastModifier=#{lastModifier},
+            lastModDate=#{lastModDate},
+            status=#{status},
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <!-- 批量更新 -->
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="updateList" item="item" index="index" separator=";">
+            UPDATE biz_message
+            <trim prefix="SET" suffixOverrides=",">
+                groupId=#{item.groupId},
+                sourceId=#{item.sourceId},
+                sourceCode=#{item.sourceCode},
+                messageTitle=#{item.messageTitle},
+                messageContent=#{item.messageContent},
+                creatorName=#{item.creatorName},
+                creator=#{item.creator},
+                createDate=#{item.createDate},
+                lastModifier=#{item.lastModifier},
+                lastModDate=#{item.lastModDate},
+                status=#{item.status},
+            </trim>
+            WHERE
+            id = #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updateMap">
+        UPDATE biz_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.groupId!=null">
+                groupId = #{map.groupId},
+            </if>
+            <if test="map.sourceId!=null">
+                sourceId = #{map.sourceId},
+            </if>
+            <if test="map.sourceCode!=null">
+                sourceCode = #{map.sourceCode},
+            </if>
+            <if test="map.messageTitle!=null">
+                messageTitle = #{map.messageTitle},
+            </if>
+            <if test="map.messageContent!=null">
+                messageContent = #{map.messageContent},
+            </if>
+            <if test="map.creatorName!=null">
+                creatorName = #{map.creatorName},
+            </if>
+            <if test="map.creator!=null">
+                creator = #{map.creator},
+            </if>
+            <if test="map.createDate!=null">
+                createDate = #{map.createDate},
+            </if>
+            <if test="map.lastModifier!=null">
+                lastModifier = #{map.lastModifier},
+            </if>
+            <if test="map.lastModDate!=null">
+                lastModDate = #{map.lastModDate},
+            </if>
+            <if test="map.status!=null">
+                status = #{map.status},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE biz_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.groupId!=null">
+                groupId = #{update.groupId},
+            </if>
+            <if test="update.sourceId!=null">
+                sourceId = #{update.sourceId},
+            </if>
+            <if test="update.sourceCode!=null">
+                sourceCode = #{update.sourceCode},
+            </if>
+            <if test="update.messageTitle!=null">
+                messageTitle = #{update.messageTitle},
+            </if>
+            <if test="update.messageContent!=null">
+                messageContent = #{update.messageContent},
+            </if>
+            <if test="update.creatorName!=null">
+                creatorName = #{update.creatorName},
+            </if>
+            <if test="update.creator!=null">
+                creator = #{update.creator},
+            </if>
+            <if test="update.createDate!=null">
+                createDate = #{update.createDate},
+            </if>
+            <if test="update.lastModifier!=null">
+                lastModifier = #{update.lastModifier},
+            </if>
+            <if test="update.lastModDate!=null">
+                lastModDate = #{update.lastModDate},
+            </if>
+            <if test="update.status!=null">
+                status = #{update.status},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.groupId!=null">
+                AND groupId = #{condition.groupId}
+            </if>
+            <if test="condition.sourceId!=null">
+                AND sourceId = #{condition.sourceId}
+            </if>
+            <if test="condition.sourceCode!=null">
+                AND sourceCode = #{condition.sourceCode}
+            </if>
+            <if test="condition.messageTitle!=null">
+                AND messageTitle = #{condition.messageTitle}
+            </if>
+            <if test="condition.messageContent!=null">
+                AND messageContent = #{condition.messageContent}
+            </if>
+            <if test="condition.creatorName!=null">
+                AND creatorName = #{condition.creatorName}
+            </if>
+            <if test="condition.creator!=null">
+                AND creator = #{condition.creator}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.lastModifier!=null">
+                AND lastModifier = #{condition.lastModifier}
+            </if>
+            <if test="condition.lastModDate!=null">
+                AND lastModDate = #{condition.lastModDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+    </update>
+
+    <update id="updateNull" parameterType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        UPDATE biz_message
+        <trim prefix="SET" suffixOverrides=",">
+            groupId = #{groupId},
+            sourceId = #{sourceId},
+            sourceCode = #{sourceCode},
+            messageTitle = #{messageTitle},
+            messageContent = #{messageContent},
+            creatorName = #{creatorName},
+            creator = #{creator},
+            createDate = #{createDate},
+            lastModifier = #{lastModifier},
+            lastModDate = #{lastModDate},
+            status = #{status},
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </delete>
+
+    <!--根据list(ids)删除对象-->
+    <delete id="deleteByIds">
+        DELETE FROM biz_message
+        WHERE id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id = #{id}
+            </if>
+            <if test="groupId!=null">
+                AND groupId = #{groupId}
+            </if>
+            <if test="sourceId!=null">
+                AND sourceId = #{sourceId}
+            </if>
+            <if test="sourceCode!=null">
+                AND sourceCode = #{sourceCode}
+            </if>
+            <if test="messageTitle!=null">
+                AND messageTitle = #{messageTitle}
+            </if>
+            <if test="messageContent!=null">
+                AND messageContent = #{messageContent}
+            </if>
+            <if test="creatorName!=null">
+                AND creatorName = #{creatorName}
+            </if>
+            <if test="creator!=null">
+                AND creator = #{creator}
+            </if>
+            <if test="createDate!=null">
+                AND createDate = #{createDate}
+            </if>
+            <if test="lastModifier!=null">
+                AND lastModifier = #{lastModifier}
+            </if>
+            <if test="lastModDate!=null">
+                AND lastModDate = #{lastModDate}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM biz_message WHERE
+        ${property} = #{value}
+    </delete>
+
+    <!--查询相关 -->
+    <select id="fetch" parameterType="java.lang.Long" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            AND id = #{id}
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.id!=null">
+                ${condition.groupOp} id ${condition.id.op} #{condition.id.data}
+            </if>
+            <if test="condition.groupId!=null">
+                ${condition.groupOp} groupId ${condition.groupId.op} #{condition.groupId.data}
+            </if>
+            <if test="condition.sourceId!=null">
+                ${condition.groupOp} sourceId ${condition.sourceId.op} #{condition.sourceId.data}
+            </if>
+            <if test="condition.sourceCode!=null">
+                ${condition.groupOp} sourceCode ${condition.sourceCode.op} #{condition.sourceCode.data}
+            </if>
+            <if test="condition.messageTitle!=null">
+                ${condition.groupOp} messageTitle ${condition.messageTitle.op} #{condition.messageTitle.data}
+            </if>
+            <if test="condition.messageContent!=null">
+                ${condition.groupOp} messageContent ${condition.messageContent.op} #{condition.messageContent.data}
+            </if>
+            <if test="condition.creatorName!=null">
+                ${condition.groupOp} creatorName ${condition.creatorName.op} #{condition.creatorName.data}
+            </if>
+            <if test="condition.creator!=null">
+                ${condition.groupOp} creator ${condition.creator.op} #{condition.creator.data}
+            </if>
+            <if test="condition.createDate!=null">
+                ${condition.groupOp} createDate ${condition.createDate.op} #{condition.createDate.data}
+            </if>
+            <if test="condition.lastModifier!=null">
+                ${condition.groupOp} lastModifier ${condition.lastModifier.op} #{condition.lastModifier.data}
+            </if>
+            <if test="condition.lastModDate!=null">
+                ${condition.groupOp} lastModDate ${condition.lastModDate.op} #{condition.lastModDate.data}
+            </if>
+            <if test="condition.status!=null">
+                ${condition.groupOp} status ${condition.status.op} #{condition.status.data}
+            </if>
+
+
+        </where>
+
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="id!=null">
+                AND id like CONCAT('%', #{id} , '%')
+            </if>
+            <if test="groupId!=null">
+                AND groupId like CONCAT('%', #{groupId} , '%')
+            </if>
+            <if test="sourceId!=null">
+                AND sourceId like CONCAT('%', #{sourceId} , '%')
+            </if>
+            <if test="sourceCode!=null">
+                AND sourceCode like CONCAT('%', #{sourceCode} , '%')
+            </if>
+            <if test="messageTitle!=null">
+                AND messageTitle like CONCAT('%', #{messageTitle} , '%')
+            </if>
+            <if test="messageContent!=null">
+                AND messageContent like CONCAT('%', #{messageContent} , '%')
+            </if>
+            <if test="creatorName!=null">
+                AND creatorName like CONCAT('%', #{creatorName} , '%')
+            </if>
+            <if test="creator!=null">
+                AND creator like CONCAT('%', #{creator} , '%')
+            </if>
+            <if test="createDate!=null">
+                AND createDate like CONCAT('%', #{createDate} , '%')
+            </if>
+            <if test="lastModifier!=null">
+                AND lastModifier like CONCAT('%', #{lastModifier} , '%')
+            </if>
+            <if test="lastModDate!=null">
+                AND lastModDate like CONCAT('%', #{lastModDate} , '%')
+            </if>
+            <if test="status!=null">
+                AND status like CONCAT('%', #{status} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.groupId!=null">
+                AND groupId = #{condition.groupId}
+            </if>
+            <if test="condition.sourceId!=null">
+                AND sourceId = #{condition.sourceId}
+            </if>
+            <if test="condition.sourceCode!=null">
+                AND sourceCode = #{condition.sourceCode}
+            </if>
+            <if test="condition.messageTitle!=null">
+                AND messageTitle = #{condition.messageTitle}
+            </if>
+            <if test="condition.messageContent!=null">
+                AND messageContent = #{condition.messageContent}
+            </if>
+            <if test="condition.creatorName!=null">
+                AND creatorName = #{condition.creatorName}
+            </if>
+            <if test="condition.creator!=null">
+                AND creator = #{condition.creator}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.lastModifier!=null">
+                AND lastModifier = #{condition.lastModifier}
+            </if>
+            <if test="condition.lastModDate!=null">
+                AND lastModDate = #{condition.lastModDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.biz.BizMessage">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM biz_message
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.id!=null">
+                AND id = #{condition.id}
+            </if>
+            <if test="condition.groupId!=null">
+                AND groupId = #{condition.groupId}
+            </if>
+            <if test="condition.sourceId!=null">
+                AND sourceId = #{condition.sourceId}
+            </if>
+            <if test="condition.sourceCode!=null">
+                AND sourceCode = #{condition.sourceCode}
+            </if>
+            <if test="condition.messageTitle!=null">
+                AND messageTitle = #{condition.messageTitle}
+            </if>
+            <if test="condition.messageContent!=null">
+                AND messageContent = #{condition.messageContent}
+            </if>
+            <if test="condition.creatorName!=null">
+                AND creatorName = #{condition.creatorName}
+            </if>
+            <if test="condition.creator!=null">
+                AND creator = #{condition.creator}
+            </if>
+            <if test="condition.createDate!=null">
+                AND createDate = #{condition.createDate}
+            </if>
+            <if test="condition.lastModifier!=null">
+                AND lastModifier = #{condition.lastModifier}
+            </if>
+            <if test="condition.lastModDate!=null">
+                AND lastModDate = #{condition.lastModDate}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(1) FROM biz_message
+        <where>
+            <if test="id!=null">
+                ${groupOp} id ${id.op} #{id.data}
+            </if>
+            <if test="groupId!=null">
+                ${groupOp} groupId ${groupId.op} #{groupId.data}
+            </if>
+            <if test="sourceId!=null">
+                ${groupOp} sourceId ${sourceId.op} #{sourceId.data}
+            </if>
+            <if test="sourceCode!=null">
+                ${groupOp} sourceCode ${sourceCode.op} #{sourceCode.data}
+            </if>
+            <if test="messageTitle!=null">
+                ${groupOp} messageTitle ${messageTitle.op} #{messageTitle.data}
+            </if>
+            <if test="messageContent!=null">
+                ${groupOp} messageContent ${messageContent.op} #{messageContent.data}
+            </if>
+            <if test="creatorName!=null">
+                ${groupOp} creatorName ${creatorName.op} #{creatorName.data}
+            </if>
+            <if test="creator!=null">
+                ${groupOp} creator ${creator.op} #{creator.data}
+            </if>
+            <if test="createDate!=null">
+                ${groupOp} createDate ${createDate.op} #{createDate.data}
+            </if>
+            <if test="lastModifier!=null">
+                ${groupOp} lastModifier ${lastModifier.op} #{lastModifier.data}
+            </if>
+            <if test="lastModDate!=null">
+                ${groupOp} lastModDate ${lastModDate.op} #{lastModDate.data}
+            </if>
+            <if test="status!=null">
+                ${groupOp} status ${status.op} #{status.data}
+            </if>
+
+        </where>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM biz_message
+    </select>
+
+</mapper>

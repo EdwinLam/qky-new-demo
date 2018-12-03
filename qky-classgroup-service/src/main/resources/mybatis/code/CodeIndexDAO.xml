@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.thinkjoy.qky.classgroup.dao.code.ICodeIndexDAO">
+
+    <sql id="Base_Column_List">
+        digit,
+        code,
+        status
+    </sql>
+    <insert id="insert" parameterType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        INSERT INTO group_code_index (
+        digit
+        ,code
+        ,status
+        ) VALUES (
+        #{digit}
+        ,#{code}
+        ,#{status}
+        )
+        <selectKey resultType="java.lang.Long" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS ID
+        </selectKey>
+    </insert>
+
+    <insert id="insertMap">
+        INSERT INTO group_code_index (
+		    digit
+		    ,code
+		    ,status
+        ) VALUES (
+		    	#{map.digit}
+		    	,#{map.code}
+		    	,#{map.status}
+        )
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO group_code_index (
+        digit
+        ,code
+        ,status
+        ) VALUES
+        <foreach collection="insertList" item="item" separator=",">
+            (
+            #{item.digit}
+            ,#{item.code}
+            ,#{item.status}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        UPDATE group_code_index
+        <trim prefix="SET" suffixOverrides=",">
+            digit=#{digit},
+            code=#{code},
+            status=#{status},
+        </trim>
+        WHERE
+    </update>
+
+
+    <!-- 批量更新 -->
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="updateList" item="item" index="index" separator=";">
+            UPDATE group_code_index
+            <trim prefix="SET" suffixOverrides=",">
+                digit=#{item.digit},
+                code=#{item.code},
+                status=#{item.status},
+            </trim>
+            WHERE
+        </foreach>
+    </update>
+
+    <update id="updateMap">
+        UPDATE group_code_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="map.digit!=null">
+                digit = #{map.digit},
+            </if>
+            <if test="map.code!=null">
+                code = #{map.code},
+            </if>
+            <if test="map.status!=null">
+                status = #{map.status},
+            </if>
+        </trim>
+        WHERE
+        id = #{map.id}
+    </update>
+
+    <update id="updateByCondition">
+        UPDATE group_code_index
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="update.digit!=null">
+                digit = #{update.digit},
+            </if>
+            <if test="update.code!=null">
+                code = #{update.code},
+            </if>
+            <if test="update.status!=null">
+                status = #{update.status},
+            </if>
+        </trim>
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.digit!=null">
+                AND digit = #{condition.digit}
+            </if>
+            <if test="condition.code!=null">
+                AND code = #{condition.code}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+    </update>
+
+    <update id="updateNull" parameterType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        UPDATE group_code_index
+        <trim prefix="SET" suffixOverrides=",">
+            digit = #{digit},
+            code = #{code},
+            status = #{status},
+        </trim>
+        WHERE
+    </update>
+
+
+    <!-- 按Id删除 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+        </trim>
+    </delete>
+
+    <!--根据list(ids)删除对象-->
+    <delete id="deleteByIds">
+        DELETE FROM group_code_index
+        WHERE id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteByCondition" parameterType="java.util.Map">
+        DELETE FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="digit!=null">
+                AND digit = #{digit}
+            </if>
+            <if test="code!=null">
+                AND code = #{code}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+        </trim>
+    </delete>
+
+    <delete id="deleteByProperty" parameterType="java.util.Map">
+        DELETE FROM group_code_index WHERE
+        ${property} = #{value}
+    </delete>
+
+    <!--查询相关 -->
+    <select id="fetch" parameterType="java.lang.Long" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+        </trim>
+    </select>
+
+    <select id="findOne" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index WHERE
+        ${property} = #{value}
+        LIMIT 0,1
+    </select>
+
+    <select id="findList" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index WHERE
+        ${property} = #{value}
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="findAll" resultType="CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryPage" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <where>
+
+            <if test="condition.whereSql != null">
+                and id in (#{condition.whereSql})
+            </if>
+
+            <if test="condition.digit!=null">
+                ${condition.groupOp} digit ${condition.digit.op} #{condition.digit.data}
+            </if>
+            <if test="condition.code!=null">
+                ${condition.groupOp} code ${condition.code.op} #{condition.code.data}
+            </if>
+            <if test="condition.status!=null">
+                ${condition.groupOp} status ${condition.status.op} #{condition.status.data}
+            </if>
+
+
+        </where>
+
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+        <if test="offset != null">
+            limit ${offset}, ${rows}
+        </if>
+    </select>
+
+    <select id="like" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="digit!=null">
+                AND digit like CONCAT('%', #{digit} , '%')
+            </if>
+            <if test="code!=null">
+                AND code like CONCAT('%', #{code} , '%')
+            </if>
+            <if test="status!=null">
+                AND status like CONCAT('%', #{status} , '%')
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+
+    <select id="queryList" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.digit!=null">
+                AND digit = #{condition.digit}
+            </if>
+            <if test="condition.code!=null">
+                AND code = #{condition.code}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="queryOne" parameterType="java.util.Map" resultType="cn.thinkjoy.qky.classgroup.domain.code.CodeIndex">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM group_code_index
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="condition.digit!=null">
+                AND digit = #{condition.digit}
+            </if>
+            <if test="condition.code!=null">
+                AND code = #{condition.code}
+            </if>
+            <if test="condition.status!=null">
+                AND status = #{condition.status}
+            </if>
+        </trim>
+        limit 0,1
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(1) FROM group_code_index
+        <where>
+            <if test="digit!=null">
+                ${groupOp} digit ${digit.op} #{digit.data}
+            </if>
+            <if test="code!=null">
+                ${groupOp} code ${code.op} #{code.data}
+            </if>
+            <if test="status!=null">
+                ${groupOp} status ${status.op} #{status.data}
+            </if>
+
+        </where>
+        <if test="orderBy!=null">
+            ORDER BY ${orderBy} ${sortBy}
+        </if>
+    </select>
+
+    <select id="selectMaxId" resultType="java.lang.Long">
+        SELECT
+        MAX(id)
+        FROM group_code_index
+    </select>
+
+</mapper>
