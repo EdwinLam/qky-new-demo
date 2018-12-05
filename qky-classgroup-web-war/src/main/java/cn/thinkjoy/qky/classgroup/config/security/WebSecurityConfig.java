@@ -1,10 +1,13 @@
 package cn.thinkjoy.qky.classgroup.config.security;
 
+import cn.thinkjoy.qky.classgroup.common.utils.AESUtil;
+import cn.thinkjoy.qky.classgroup.common.utils.EncryptUtil;
 import cn.thinkjoy.qky.classgroup.config.IgnoredUrlsProperties;
 import cn.thinkjoy.qky.classgroup.config.security.jwt.AuthenticationFailHandler;
 import cn.thinkjoy.qky.classgroup.config.security.jwt.AuthenticationSuccessHandler;
 import cn.thinkjoy.qky.classgroup.config.security.jwt.JWTAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,9 +19,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.cors.CorsUtils;
+
+import java.io.ByteArrayInputStream;
+
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Value("${config}")
+    private  byte[] data;
     @Autowired
     private IgnoredUrlsProperties ignoredUrlsProperties;
 
@@ -38,7 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http
                 .authorizeRequests();
 

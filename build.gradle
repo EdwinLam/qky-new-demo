@@ -6,12 +6,14 @@ buildscript {
     }
     repositories {
         repositories { maven { url 'http://repo.qtonecloud.cn/content/groups/public/' } }
+        repositories { maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' } }
         mavenCentral()
     }
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath 'org.springframework:springloaded:1.2.7.RELEASE'
+        classpath 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.M3'
     }
 }
 
@@ -41,6 +43,7 @@ subprojects {
     }
     repositories {
         repositories { maven { url 'http://repo.qtonecloud.cn/content/groups/public/' } }
+        repositories { maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' } }
         mavenCentral()
     }
 

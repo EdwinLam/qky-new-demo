@@ -12,6 +12,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     logSlowSql: true
 
+
 qky:
   # token过期时间（分钟）
   tokenExpireTime: 60
