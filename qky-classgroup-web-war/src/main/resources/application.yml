@@ -5,9 +5,9 @@ server:
 spring:
   # 数据源
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/qky_classgroup?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root
-    password: root
+    url: ENC(jdbc_url)
+    username: ENC(jdbc_user)
+    password: ENC(jdbc_password)
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
     logSlowSql: true
@@ -39,7 +39,6 @@ ignored:
   - /**/*.css
   - /**/*.png
   - /**/*.ico
-
 # Mybatis-plus
 mybatis-plus:
   # 放在resource目录 classpath:/mapper/*Mapper.xml
