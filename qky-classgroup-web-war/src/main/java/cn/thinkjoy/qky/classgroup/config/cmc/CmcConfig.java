@@ -23,7 +23,7 @@ public class CmcConfig {
     private   byte[]  data;
 
     @Bean("cmc")
-    public Map<String, String> getCmcConfig() {
+    public Map<String, String> initCmcConfig() {
         Map<String, String> cmcConfig = new HashMap<>();
         if (EncryptUtil.isEncrypt(data)) {
             byte[] pureData = new byte[data.length - 2];
