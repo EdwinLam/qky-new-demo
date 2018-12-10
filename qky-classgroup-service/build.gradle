@@ -2,6 +2,11 @@ archivesBaseName = 'qky-classgroup-service'
 
 
 dependencies {
+    compile 'net.java.dev.jna:jna:4.5.1'
+    compile 'junit:junit:4.12'
+    compile 'org.bytedeco:javacv:1.4.3'
+    compile 'org.bytedeco:javacv-platform:1.4.3'
+
     // spring boot
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-security')
@@ -14,7 +19,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator:2.0.3.RELEASE'
     runtime('mysql:mysql-connector-java')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
-
+    // Lombok
+    compile('org.projectlombok:lombok:1.18.0')
     // 数据库连接池
     compile('com.alibaba:druid:1.1.4')
     // MybatisPlus
