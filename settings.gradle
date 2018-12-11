@@ -1,5 +1,6 @@
-rootProject.name = 'qky-classgroup'
-include 'qky-classgroup-domain'
-include 'qky-classgroup-service'
-include 'qky-classgroup-web-war'
+rootProject.name = 'ripple'
+include 'ripple-entity'
+include 'ripple-service'
+include 'ripple-web'
+include 'ripple-lab'
 

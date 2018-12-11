@@ -48,8 +48,14 @@ subprojects {
     }
 
     dependencies {
-        //都会依赖domain
-        compile group: "cn.thinkjoy.common", name: "thinkjoy-domain-common", version: "$thinkjoyCommonVersion", changing: true
+        compile('cn.hutool:hutool-all:4.0.5')
+        // JPA
+        compile('org.springframework.boot:spring-boot-starter-data-jpa')
+        // Lombok
+        compile('org.projectlombok:lombok:1.18.0')
+        // Swagger API文档
+        compile('io.springfox:springfox-swagger-ui:2.7.0')
+        compile('io.springfox:springfox-swagger2:2.7.0')
         // 加载libs目录下所有的jar
         compile fileTree(dir: 'libs', include: ['*.jar'])
     }
