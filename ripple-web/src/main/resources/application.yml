@@ -18,27 +18,27 @@ spring:
 #    url: ENC(jdbc_url)
 #    username: ENC(jdbc_user)
 #    password: ENC(jdbc_password)
-    url: jdbc:mysql://localhost:3306/ripple?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/ripple?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
     logSlowSql: true
-    jpa:
-      show-sql: true
-      # 自动生成表结构
-      generate-ddl: true
+  jpa:
+    show-sql: true
+    # 自动生成表结构
+    generate-ddl: true
+    properties:
       hibernate:
-        ddl-auto: create
+        hbm2ddl: update
     # Redis
-    redis:
-      host: 127.0.0.1
-      password:
-      # 数据库索引 默认0
-      database: 0
-      port: 6379
-      timeout: 3000
-
+  redis:
+    host: 127.0.0.1
+    password:
+    # 数据库索引 默认0
+    database: 0
+    port: 6379
+    timeout: 3000
 
 qky:
   # token过期时间（分钟）

@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 //启用JPA审计
 @EnableJpaAuditing
 //启用缓存
-//@EnableCaching
+@EnableCaching
 //启用异步
 @EnableAsync
 public class RippleWebApplication {
