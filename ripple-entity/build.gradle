@@ -1,0 +1,7 @@
+archivesBaseName = 'ripple-entity'
+
+dependencies {
+//    compile project(':ripple-lab')
+    // MybatisPlus
+    compile('com.baomidou:mybatis-plus-boot-starter:2.2.0')
+}

@@ -1,0 +1,12 @@
+archivesBaseName = 'ripple-web'
+apply plugin: 'war'// war可以将开发的应用打包成部署包
+
+
+dependencies {
+    compile project(':ripple-service')
+    providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+    // spring boot
+    compile('org.springframework.boot:spring-boot-starter-web')
+
+
+}

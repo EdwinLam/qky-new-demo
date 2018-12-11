@@ -1,0 +1,35 @@
+package ${entity.controllerPackage};
+
+import cn.ripple.controller.BaseController;
+import cn.ripple.common.utils.PageUtil;
+import cn.ripple.common.utils.ResultUtil;
+import cn.ripple.common.vo.PageVo;
+import cn.ripple.common.vo.Result;
+import cn.ripple.entity.${entity.className};
+import cn.ripple.service.${entity.className}Service;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+
+/**
+ * @author ${entity.author}
+ */
+@Slf4j
+@RestController
+@Api(description = "${entity.description}管理接口")
+@RequestMapping("/ripple/${entity.classNameLowerCase}")
+public class ${entity.className}Controller extends BaseController<${entity.className}, ${entity.primaryKeyType}>{
+
+    @Autowired
+    private ${entity.className}Service ${entity.classNameLowerCase}Service;
+
+    @Override
+    public ${entity.className}Service getService() {
+        return ${entity.classNameLowerCase}Service;
+    }
+
+}
