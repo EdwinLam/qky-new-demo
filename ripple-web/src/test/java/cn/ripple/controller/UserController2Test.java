@@ -1,9 +1,9 @@
 package cn.ripple.controller;
 
-import cn.ripple.service.UserService;
+import cn.ripple.controller.user.UserInfoController;
+import cn.ripple.service.user.UserInfoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,13 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @Description:
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(UserController.class)
+@WebMvcTest(UserInfoController.class)
 public class UserController2Test {
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private UserService userService;
+    private UserInfoService userInfoService;
 
 
     @Test
