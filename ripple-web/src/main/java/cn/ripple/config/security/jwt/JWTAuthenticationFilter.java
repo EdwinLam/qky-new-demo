@@ -2,7 +2,7 @@ package cn.ripple.config.security.jwt;
 
 import cn.hutool.core.util.StrUtil;
 import cn.ripple.constant.SecurityConstant;
-import cn.ripple.entity.User;
+import cn.ripple.entity.user.UserInfo;
 import cn.ripple.enums.ResponseCodeEnum;
 import cn.ripple.exception.RippleException;
 import com.google.gson.Gson;
@@ -69,7 +69,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                 String username = claims.getSubject();
                 if(StrUtil.isNotBlank(username)) {
                     String json = claims.get("userInfo").toString();
-                    User user = new Gson().fromJson(json,User.class);
+                    UserInfo user = new Gson().fromJson(json,UserInfo.class);
                     return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                 }
             } catch (ExpiredJwtException e) {

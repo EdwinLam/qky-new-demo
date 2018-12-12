@@ -2,26 +2,25 @@ package cn.ripple.config.security;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.ripple.entity.User;
+import cn.ripple.entity.user.UserInfo;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 
-public class SecurityUserDetails extends User implements UserDetails, CredentialsContainer {
+public class SecurityUserDetails extends UserInfo implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = 1L;
 
-    public SecurityUserDetails(User user) {
-        if(user!=null) {
-            BeanUtil.copyProperties(user,this);
-            this.setUsername(user.getUsername());
-            this.setPassword(user.getPassword());
+    public SecurityUserDetails(UserInfo userInfo) {
+        if(userInfo!=null) {
+            BeanUtil.copyProperties(userInfo,this);
+            this.setUsername(userInfo.getUsername());
+            this.setPassword(userInfo.getPassword());
         }
     }
 

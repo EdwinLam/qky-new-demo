@@ -1,6 +1,7 @@
-package cn.ripple.entity;
+package cn.ripple.entity.user;
 
 
+import cn.ripple.entity.BaseEntity;
 import cn.ripple.enums.DataStatusEnum;
 import com.baomidou.mybatisplus.annotations.TableName;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,9 +13,9 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "r_user")
-@TableName("r_user")
-public class User extends BaseEntity {
+@Table(name = "user_info")
+@TableName("user_info")
+public class UserInfo extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

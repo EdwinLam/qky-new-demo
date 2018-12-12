@@ -1,6 +1,9 @@
 package cn.ripple.generator;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.ripple.entity.Table;
 import cn.ripple.generator.bean.EntityOfEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.Configuration;
@@ -12,6 +15,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class RippleGenerator {
@@ -68,37 +74,37 @@ public class RippleGenerator {
     /**
      * 模板地址
      */
-    private static final String templatePath =System.getProperty("user.dir")+File.separator+"ripple-lab"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String templatePath =getProjectPath()+File.separator+"ripple-lab"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"generator"+File.separator+"template";
 
     /**
      * 实体地址
      */
-    private static final String entityPath =System.getProperty("user.dir")+File.separator+"ripple-entity"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String entityPath =getProjectPath()+File.separator+"ripple-entity"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"entity";
 
     /**
      * service地址
      */
-    private static final String servicePath =System.getProperty("user.dir")+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String servicePath =getProjectPath()+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"service";
 
     /**
      * service impl地址
      */
-    private static final String serviceImplPath =System.getProperty("user.dir")+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String serviceImplPath =getProjectPath()+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"service"+File.separator+"impl";
 
     /**
      * dao地址
      */
-    private static final String daoPath =System.getProperty("user.dir")+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String daoPath =getProjectPath()+File.separator+"ripple-service"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"dao";
 
     /**
      * controller地址
      */
-    private static final String controllerPath =System.getProperty("user.dir")+File.separator+"ripple-web"+File.separator+"src"+File.separator+"main"+File.separator+"java"
+    private static final String controllerPath =getProjectPath()+File.separator+"ripple-web"+File.separator+"src"+File.separator+"main"+File.separator+"java"
             +File.separator+"cn"+File.separator+"ripple"+File.separator+"controller";
 
 
@@ -108,23 +114,67 @@ public class RippleGenerator {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        //模板路径
-        FileResourceLoader resourceLoader = new FileResourceLoader(templatePath,"utf-8");
-        Configuration cfg = Configuration.defaultConfiguration();
-        GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+
 //        //生成代码
-        generateCode(gt);
+        generateCode("user");
 
         //根据类名删除生成的代码
         //deleteCode(className);
     }
 
+    private static String getProjectPath(){
+        return System.getProperty("user.dir").replace(File.separatorChar+"ripple-lab","");
+    }
+
+    /**
+     * 根据名称获取类层次
+     * @param tableName
+     * @return
+     */
+    private static String getTableClassNames(String tableName){
+        String tableClassName = tableName;
+        if(StrUtil.isNotBlank(tableName)){
+            String[] moduleName = tableName.split("_");
+            List<String> moduleNameList = CollUtil.newArrayList(moduleName);
+            if(moduleNameList.size()>1){
+                moduleNameList.remove(moduleNameList.size() - 1);
+            }
+            tableClassName = CollectionUtil.join(moduleNameList, "."); //
+        }
+        return tableClassName;
+    }
+
+    /**
+     * 根据名称获取目录层次
+     * @param tableName
+     * @return
+     */
+    private static String getTablePathNames(String tableName){
+        String tableClassName = tableName;
+        if(StrUtil.isNotBlank(tableName)){
+            String[] moduleName = tableName.split("_");
+            List<String> moduleNameList = CollUtil.newArrayList(moduleName);
+            if(moduleNameList.size()>1){
+                moduleNameList.remove(moduleNameList.size() - 1);
+            }
+            tableClassName = CollectionUtil.join(moduleNameList, File.separator); //
+        }
+        return tableClassName;
+    }
+
     /**
      * 生成代码
-     * @param gt
+     * @param tableName
      * @throws IOException
      */
-    private static void generateCode(GroupTemplate gt) throws IOException{
+    public static void generateCode(String tableName) throws IOException{
+        String plusClass = "."+getTableClassNames(tableName);
+        String plusPath = File.separator+getTablePathNames(tableName);
+        String className = first2UpperCase(underlineToCamel(new StringBuffer(tableName)).toString());
+        //模板路径
+        FileResourceLoader resourceLoader = new FileResourceLoader(templatePath,"utf-8");
+        Configuration cfg = Configuration.defaultConfiguration();
+        GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
 
         Template entityTemplate = gt.getTemplate("entity.btl");
         Template daoTemplate = gt.getTemplate("dao.btl");
@@ -133,11 +183,11 @@ public class RippleGenerator {
         Template controllerTemplate = gt.getTemplate("controller.btl");
 
         EntityOfEntity entity = new EntityOfEntity();
-        entity.setEntityPackage(entityPackage);
-        entity.setDaoPackage(daoPackage);
-        entity.setServicePackage(servicePackage);
-        entity.setServiceImplPackage(serviceImplPackage);
-        entity.setControllerPackage(controllerPackage);
+        entity.setEntityPackage(entityPackage+plusClass);
+        entity.setDaoPackage(daoPackage+plusClass);
+        entity.setServicePackage(servicePackage+plusClass);
+        entity.setServiceImplPackage(serviceImplPackage+plusClass);
+        entity.setControllerPackage(controllerPackage+plusClass);
         entity.setAuthor(author);
         entity.setClassName(className);
         entity.setTableName("t_"+camel2Underline(className));
@@ -152,9 +202,11 @@ public class RippleGenerator {
         String entityResult = entityTemplate.render();
         log.info(entityResult);
         //创建文件
-        String entityFileUrl = entityPath+File.separator+className+".java";
+        String entityFileUrl = entityPath+plusPath+File.separator+className+".java";
         File entityFile = new File(entityFileUrl);
+
         if(!entityFile.exists()){
+            new File(entityPath+plusPath).mkdirs();
             //实体类若存在则不重新生成
             entityFile.createNewFile();
             out = new FileOutputStream(entityFile);
@@ -166,7 +218,8 @@ public class RippleGenerator {
         String daoResult = daoTemplate.render();
         log.info(daoResult);
         //创建文件
-        String daoFileUrl =daoPath+ File.separator+className+"Dao.java";
+        String daoFileUrl =daoPath+plusPath+ File.separator+className+"Dao.java";
+        new File(daoPath+plusPath).mkdirs();
         File daoFile = new File(daoFileUrl);
         daoFile.createNewFile();
         out = new FileOutputStream(daoFile);
@@ -177,7 +230,8 @@ public class RippleGenerator {
         String serviceResult = serviceTemplate.render();
         log.info(serviceResult);
         //创建文件
-        String serviceFileUrl =servicePath+File.separator+className+"Service.java";
+        String serviceFileUrl =servicePath+plusPath+File.separator+className+"Service.java";
+        new File(servicePath+plusPath).mkdirs();
         File serviceFile = new File(serviceFileUrl);
         serviceFile.createNewFile();
         out = new FileOutputStream(serviceFile);
@@ -188,7 +242,9 @@ public class RippleGenerator {
         String serviceImplResult = serviceImplTemplate.render();
         log.info(serviceImplResult);
         //创建文件
-        String serviceImplFileUrl =serviceImplPath+File.separator+className+"ServiceImpl.java";
+        String serviceImplFileUrl =serviceImplPath+plusPath+File.separator+className+"ServiceImpl.java";
+        new File(serviceImplPath+plusPath).mkdirs();
+
         File serviceImplFile = new File(serviceImplFileUrl);
         serviceImplFile.createNewFile();
         out = new FileOutputStream(serviceImplFile);
@@ -199,7 +255,8 @@ public class RippleGenerator {
         String controllerResult = controllerTemplate.render();
         log.info(controllerResult);
         //创建文件
-        String controllerFileUrl = controllerPath+File.separator+className+"Controller.java";
+        String controllerFileUrl = controllerPath+plusPath+File.separator+className+"Controller.java";
+        new File(controllerPath+plusPath).mkdirs();
         File controllerFile = new File(controllerFileUrl);
         controllerFile.createNewFile();
         out = new FileOutputStream(controllerFile);
@@ -247,6 +304,29 @@ public class RippleGenerator {
     }
 
     /**
+     * 下划线转驼峰
+     * @param str
+     * @return
+     */
+    public static StringBuffer underlineToCamel(StringBuffer str) {
+        //利用正则删除下划线，把下划线后一位改成大写
+        Pattern pattern = Pattern.compile("_(\\w)");
+        Matcher matcher = pattern.matcher(str);
+        StringBuffer sb = new StringBuffer(str);
+        if(matcher.find()) {
+            sb = new StringBuffer();
+            //将当前匹配子串替换为指定字符串，并且将替换后的子串以及其之前到上次匹配子串之后的字符串段添加到一个StringBuffer对象里。
+            //正则之前的字符和被替换的字符
+            matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
+            //把之后的也添加到StringBuffer对象里
+            matcher.appendTail(sb);
+        }else {
+            return sb;
+        }
+        return underlineToCamel(sb);
+    }
+
+    /**
      * 驼峰法转下划线
      */
     public static String camel2Underline(String str) {
@@ -279,7 +359,23 @@ public class RippleGenerator {
         }
         StringBuffer sb = new StringBuffer();
         sb.append(Character.toLowerCase(str.charAt(0)));
-        sb.append(str.substring(1,str.length()));
+        sb.append(str.substring(1));
+        return sb.toString();
+    }
+
+    /**
+     * 首字母大写哦
+     */
+    public static String first2UpperCase(String str) {
+        if (StrUtil.isBlank(str)) {
+            return "";
+        }
+        if(str.length()==1){
+            return str.toLowerCase();
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(Character.toUpperCase(str.charAt(0)));
+        sb.append(str.substring(1));
         return sb.toString();
     }
 }

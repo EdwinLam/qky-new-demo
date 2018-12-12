@@ -3,4 +3,5 @@ archivesBaseName = 'ripple-lab'
 
 dependencies {
     compile('com.ibeetl:beetl:2.8.3')
+    compile project(':ripple-web')
 }
