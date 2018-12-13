@@ -18,7 +18,7 @@ import javax.persistence.Transient;
 public class FaceInfo extends BaseEntity {
 	@Transient
 	@TableField(exist=false)
-	private String rect;
+	private Rect rect;
 	@Transient
 	@TableField(exist=false)
 	private Face3DAngle face3DAngle;

@@ -125,6 +125,7 @@ public class FaceEngineServiceImpl implements FaceEngineService {
                 // 提取人脸特征
                 FaceFeature faceFeature=faceEngine.extractFeature(singleFaceInfo,imageBuf);
                 faceFeature.getFeatureData();
+//                faceInfo.setFaceFeature(faceFeature.getFeatureData());
 
             }
             return  faces;
