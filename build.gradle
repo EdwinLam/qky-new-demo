@@ -56,8 +56,8 @@ subprojects {
         // Swagger API文档
         compile('io.springfox:springfox-swagger-ui:2.7.0')
         compile('io.springfox:springfox-swagger2:2.7.0')
-        // 加载libs目录下所有的jar
-        compile fileTree(dir: 'libs', include: ['*.jar'])
+        // 加载lib目录下所有的jar
+        compile fileTree(dir: '../lib', include: ['*.jar'])
     }
 
     jar {

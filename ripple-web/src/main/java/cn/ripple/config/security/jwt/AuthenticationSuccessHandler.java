@@ -25,7 +25,7 @@ import java.util.*;
 @Component
 public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    @Value("${qky.tokenExpireTime}")
+    @Value("${ripple.tokenExpireTime}")
     private Integer tokenExpireTime;
 
 

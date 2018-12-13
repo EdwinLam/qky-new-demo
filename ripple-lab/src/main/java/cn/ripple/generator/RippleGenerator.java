@@ -135,11 +135,7 @@ public class RippleGenerator {
         String tableClassName = tableName;
         if(StrUtil.isNotBlank(tableName)){
             String[] moduleName = tableName.split("_");
-            List<String> moduleNameList = CollUtil.newArrayList(moduleName);
-            if(moduleNameList.size()>1){
-                moduleNameList.remove(moduleNameList.size() - 1);
-            }
-            tableClassName = CollectionUtil.join(moduleNameList, "."); //
+            tableClassName = moduleName[0]; //
         }
         return tableClassName;
     }
@@ -153,11 +149,7 @@ public class RippleGenerator {
         String tableClassName = tableName;
         if(StrUtil.isNotBlank(tableName)){
             String[] moduleName = tableName.split("_");
-            List<String> moduleNameList = CollUtil.newArrayList(moduleName);
-            if(moduleNameList.size()>1){
-                moduleNameList.remove(moduleNameList.size() - 1);
-            }
-            tableClassName = CollectionUtil.join(moduleNameList, File.separator); //
+            tableClassName = moduleName[0]; //
         }
         return tableClassName;
     }

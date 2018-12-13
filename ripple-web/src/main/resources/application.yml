@@ -31,7 +31,7 @@ spring:
     properties:
       hibernate:
         hbm2ddl: update
-    # Redis
+  # Redis
   redis:
     host: 127.0.0.1
     password:
@@ -39,12 +39,6 @@ spring:
     database: 0
     port: 6379
     timeout: 3000
-
-qky:
-  # token过期时间（分钟）
-  tokenExpireTime: 60
-  # 用户选择保存登录状态对应token过期时间（天）
-  saveLoginTime: 7
   # ES
   elasticsearch:
     nodeClient: 127.0.0.1:9200
@@ -52,9 +46,20 @@ qky:
   logRecord:
     es: false
 
+ripple:
+  # token过期时间（分钟）
+  tokenExpireTime: 60
+  # 用户选择保存登录状态对应token过期时间（天）
+  saveLoginTime: 7
+  face:
+    appId: GTSaeKdSqf633HNt4HhytLXjgUeNiZxa5rgqb5CmGwpU
+    sdkKey: CzLuLGfDQUyN82vhrn13HFQSoC2qowc6YSiNYZpQvGGd
+    threadPoolSize: 5
+
 # 忽略鉴权url
 ignored:
   urls:
+  - /ripple/userInfo/faceFeature
   - /xboot/permission/getMenuList/**
   - /xboot/user/regist
   - /xboot/common/**

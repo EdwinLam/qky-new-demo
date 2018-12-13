@@ -44,4 +44,7 @@ public class UserInfo extends BaseEntity {
     @ApiModelProperty(value = "状态 默认0正常 -1拉黑")
     private Integer status = DataStatusEnum.ENABLED.getValue();
 
+    @ApiModelProperty(value = "人脸特征")
+    private byte[] faceFeature;
+
 }
