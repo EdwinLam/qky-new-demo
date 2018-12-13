@@ -25,9 +25,31 @@ public class SingleFaceInfo extends Structure {
 	public int faceOrient;
 
 	/**
+	 * 性别
+	 */
+	public int gender;
+
+	/**
 	 * 年龄
 	 */
 	public int age;
+
+	/**
+	 * 横滚角
+	 */
+	public float roll;
+	/**
+	 * 偏航角
+	 */
+	public float yaw;
+	/**
+	 * 俯仰角
+	 */
+	public float pitch;
+	/**
+	 * 0: 正常，其他数值:出错 int[]
+	 */
+	public int status;
 
 	@Override
 	protected List<String> getFieldOrder() {

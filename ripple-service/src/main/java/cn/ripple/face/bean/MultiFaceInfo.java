@@ -28,15 +28,19 @@ public class MultiFaceInfo extends Structure {
 	private int[] orients;
 	private SingleFaceInfo[] faces;
 	private int[] ages;
+	private int[] genders;
+
+	private float[] rolls;
+	private float[] yaws;
+	private float[] pitchs;
+	private int[] statuses;
 
 	@Override
 	protected List<String> getFieldOrder() {
 		return Arrays.asList("faceRect", "faceOrient", "faceNum");
 	}
 
-	public int[] getAges(){
-		return ages;
-	}
+
 
 	public Rect[] getFaceRects() {
 		if (rects == null) {
@@ -83,9 +87,12 @@ public class MultiFaceInfo extends Structure {
 			SingleFaceInfo face = new SingleFaceInfo();
 			face.faceOrient = getFaceOrients()[i];
 			face.faceRect = getFaceRects()[i];
-			if(ages.length>i){
-				face.age=ages[i];
-			}
+			face.roll = rolls[i];
+			face.yaw = yaws[i];
+			face.pitch = pitchs[i];
+			face.status = statuses[i];
+			face.age=ages[i];
+			face.gender=genders[i];
 			faces[i] = face;
 		}
 		return faces;
@@ -93,5 +100,25 @@ public class MultiFaceInfo extends Structure {
 
 	public void setAges(int[] ages) {
 		this.ages = ages;
+	}
+
+	public void setGenders(int[] genders) {
+		this.genders = genders;
+	}
+
+	public void setRolls(float[] rolls) {
+		this.rolls = rolls;
+	}
+
+	public void setYaws(float[] yaws) {
+		this.yaws = yaws;
+	}
+
+	public void setStatuses(int[] statuses) {
+		this.statuses = statuses;
+	}
+
+	public void setPitchs(float[] pitchs) {
+		this.pitchs = pitchs;
 	}
 }

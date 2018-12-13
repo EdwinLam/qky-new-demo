@@ -1,8 +1,10 @@
 package cn.ripple.service.impl.face;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.ripple.entity.face.Face3DAngle;
 import cn.ripple.entity.face.FaceInfo;
 import cn.ripple.entity.face.ImageInfo;
+import cn.ripple.entity.face.Rect;
 import cn.ripple.entity.user.UserInfo;
 import cn.ripple.face.FaceEngine;
 import cn.ripple.face.bean.FaceFeature;
@@ -102,12 +104,28 @@ public class FaceEngineServiceImpl implements FaceEngineService {
             MultiFaceInfo multiFaceInfo = faceEngine.detectFaces(imageBuf);
             for(SingleFaceInfo singleFaceInfo:multiFaceInfo.getFaces()){
                 FaceInfo faceInfo = new FaceInfo();
-                faceInfo.setLeft(singleFaceInfo.faceRect.left);
-                faceInfo.setRight(singleFaceInfo.faceRect.right);
-                faceInfo.setTop(singleFaceInfo.faceRect.top);
-                faceInfo.setBottom(singleFaceInfo.faceRect.bottom);
+                // 方位信息
+                Rect rect = new Rect();
+                rect.setLeft(singleFaceInfo.faceRect.left);
+                rect.setRight(singleFaceInfo.faceRect.right);
+                rect.setTop(singleFaceInfo.faceRect.top);
+                rect.setBottom(singleFaceInfo.faceRect.bottom);
+                faceInfo.setRect(rect);
+                // 3d相关信息
+                Face3DAngle face3DAngle = new Face3DAngle();
+                face3DAngle.setRoll(singleFaceInfo.roll);
+                face3DAngle.setPitch(singleFaceInfo.pitch);
+                face3DAngle.setYaw(singleFaceInfo.yaw);
+                face3DAngle.setStatus(singleFaceInfo.status);
+                faceInfo.setFace3DAngle(face3DAngle);
+                // 年龄信息
                 faceInfo.setAge(singleFaceInfo.age);
+                faceInfo.setGender(singleFaceInfo.gender);
                 faces.add(faceInfo);
+                // 提取人脸特征
+                FaceFeature faceFeature=faceEngine.extractFeature(singleFaceInfo,imageBuf);
+                faceFeature.getFeatureData();
+
             }
             return  faces;
         } catch (Exception e) {
