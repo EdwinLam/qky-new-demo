@@ -6,6 +6,7 @@ import cn.ripple.face.bean.SingleFaceInfo;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public interface FaceEngineService {
 
@@ -17,5 +18,7 @@ public interface FaceEngineService {
     byte[] extractFaceFeature(BufferedImage imageBuf);
 
     List<FaceInfo> detectFaces(BufferedImage imageBuf);
+
+    List<FaceInfo> compareFaceFeature(byte[] faceFeature, Integer groupId) throws InterruptedException, ExecutionException;
 
 }

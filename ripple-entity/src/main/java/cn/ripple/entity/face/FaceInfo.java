@@ -8,7 +8,6 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 
 @Data
@@ -16,35 +15,35 @@ import javax.persistence.Transient;
 @Table(name = "face_info")
 @TableName("face_info")
 public class FaceInfo extends BaseEntity {
-	@Transient
-	@TableField(exist=false)
-	private Rect rect;
-	@Transient
-	@TableField(exist=false)
-	private Face3DAngle face3DAngle;
-
-	// 角度，逆时针方向
-	@Transient
-	@TableField(exist=false)
+	@ApiModelProperty(value = "人脸分组id")
+	private Long groupId;
+	@ApiModelProperty(value = "左位置")
+	private int rectLeft;
+	@ApiModelProperty(value = "上位置")
+	private int rectTop;
+	@ApiModelProperty(value = "右位置")
+	private int rectRight;
+	@ApiModelProperty(value = "下位置")
+	private int rectBottom;
+	@ApiModelProperty(value = "横滚角")
+	private float face3dRoll;
+	@ApiModelProperty(value = "偏航角")
+	private float face3dYaw;
+	@ApiModelProperty(value = "俯仰角")
+	private float face3dPitch;
+	@ApiModelProperty(value = "0: 正常，其他数值：检测结果不可信")
+	private int face3dStatus;
+	@ApiModelProperty(value = "逆时针方向")
 	public int faceOrient;
-
-	/**
-	 * 年龄
-	 */
-	@Transient
-	@TableField(exist=false)
+	@ApiModelProperty(value = "年龄")
 	private int age;
-	/**
-	 * 性别
-	 */
-	@Transient
-	@TableField(exist=false)
+	@ApiModelProperty(value = "性别")
 	private int  gender;
-
 	@ApiModelProperty(value = "人脸token")
 	private String token;
-
 	@ApiModelProperty(value = "人脸特征")
 	private byte[] faceFeature;
-
+	@ApiModelProperty(value = "相似度")
+	@TableField(exist=false)
+	private Float similarValue;
 }

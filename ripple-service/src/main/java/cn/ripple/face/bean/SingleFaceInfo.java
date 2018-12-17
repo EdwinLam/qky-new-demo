@@ -53,7 +53,7 @@ public class SingleFaceInfo extends Structure {
 
 	@Override
 	protected List<String> getFieldOrder() {
-		return Arrays.asList("faceRect", "faceOrient");
+		return Arrays.asList("faceRect", "faceOrient","gender","age","roll","yaw","pitch","status");
 	}
 
 }

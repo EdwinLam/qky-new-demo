@@ -2,7 +2,10 @@ package cn.ripple.entity.user;
 
 
 import cn.ripple.entity.BaseEntity;
+import cn.ripple.entity.face.FaceInfo;
+import cn.ripple.entity.face.Rect;
 import cn.ripple.enums.DataStatusEnum;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,6 +13,7 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Data
 @Entity
@@ -46,5 +50,18 @@ public class UserInfo extends BaseEntity {
 
     @ApiModelProperty(value = "人脸特征")
     private byte[] faceFeature;
+
+    @ApiModelProperty(value = "人脸特征token")
+    private String faceToken;
+
+    @Transient
+    @ApiModelProperty(value = "相似度")
+    @TableField(exist=false)
+    private Long similarValue;
+
+    @Transient
+    @ApiModelProperty(value = "相似度")
+    @TableField(exist=false)
+    private FaceInfo faceInfo;
 
 }

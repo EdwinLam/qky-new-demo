@@ -182,7 +182,7 @@ public class RippleGenerator {
         entity.setControllerPackage(controllerPackage+plusClass);
         entity.setAuthor(author);
         entity.setClassName(className);
-        entity.setTableName("t_"+camel2Underline(className));
+        entity.setTableName(camel2Underline(className));
         entity.setClassNameLowerCase(first2LowerCase(className));
         entity.setDescription(description);
         entity.setPrimaryKeyType(primaryKeyType);
@@ -203,6 +203,8 @@ public class RippleGenerator {
             entityFile.createNewFile();
             out = new FileOutputStream(entityFile);
             entityTemplate.renderTo(out);
+        }else{
+            return;
         }
 
         //生成dao代码

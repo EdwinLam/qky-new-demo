@@ -59,6 +59,7 @@ ripple:
 # 忽略鉴权url
 ignored:
   urls:
+  - /ripple/faceInfo/**
   - /ripple/userInfo/faceFeature
   - /xboot/permission/getMenuList/**
   - /xboot/user/regist
