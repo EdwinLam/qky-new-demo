@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 
@@ -41,6 +42,7 @@ public class FaceInfo extends BaseEntity {
 	private int  gender;
 	@ApiModelProperty(value = "人脸token")
 	private String token;
+	@Lob
 	@ApiModelProperty(value = "人脸特征")
 	private byte[] faceFeature;
 	@ApiModelProperty(value = "相似度")

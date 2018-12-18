@@ -1,4 +1,4 @@
-package cn.ripple.entity.face;
+package cn.ripple.dao.face;
 
 
 public class ImageInfo {

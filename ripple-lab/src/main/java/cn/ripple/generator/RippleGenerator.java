@@ -244,17 +244,17 @@ public class RippleGenerator {
         out = new FileOutputStream(serviceImplFile);
         serviceImplTemplate.renderTo(out);
 
-        //生成controller代码
-        controllerTemplate.binding("entity",entity);
-        String controllerResult = controllerTemplate.render();
-        log.info(controllerResult);
-        //创建文件
-        String controllerFileUrl = controllerPath+plusPath+File.separator+className+"Controller.java";
-        new File(controllerPath+plusPath).mkdirs();
-        File controllerFile = new File(controllerFileUrl);
-        controllerFile.createNewFile();
-        out = new FileOutputStream(controllerFile);
-        controllerTemplate.renderTo(out);
+//        //生成controller代码
+//        controllerTemplate.binding("entity",entity);
+//        String controllerResult = controllerTemplate.render();
+//        log.info(controllerResult);
+//        //创建文件
+//        String controllerFileUrl = controllerPath+plusPath+File.separator+className+"Controller.java";
+//        new File(controllerPath+plusPath).mkdirs();
+//        File controllerFile = new File(controllerFileUrl);
+//        controllerFile.createNewFile();
+//        out = new FileOutputStream(controllerFile);
+//        controllerTemplate.renderTo(out);
 
         out.close();
         log.info("=====生成代码成功=====");

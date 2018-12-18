@@ -2,15 +2,14 @@ package cn.ripple.service.impl.face;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.ripple.dao.face.FaceInfoDao;
+import cn.ripple.dao.face.ImageInfo;
 import cn.ripple.entity.face.FaceInfo;
-import cn.ripple.face.FaceEngine;
-import cn.ripple.face.bean.FaceFeature;
-import cn.ripple.face.bean.MultiFaceInfo;
-import cn.ripple.face.bean.SingleFaceInfo;
 import cn.ripple.factory.FaceEngineFactory;
 import cn.ripple.service.face.FaceEngineService;
-import cn.ripple.service.face.FaceInfoService;
 import cn.ripple.service.user.UserInfoService;
+import com.arcsoft.face.*;
+import com.arcsoft.face.enums.ImageFormat;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +54,11 @@ public class FaceEngineServiceImpl implements FaceEngineService {
     private GenericObjectPool<FaceEngine> compareFaceObjectPool;
 
     @Autowired
-    private UserInfoService userInfoService;
+    private FaceInfoDao faceInfoDao;
 
     @Autowired
-    private FaceInfoService faceInfoService;
+    private UserInfoService userInfoService;
+
 
     @PostConstruct
     public void init() {
@@ -70,11 +69,12 @@ public class FaceEngineServiceImpl implements FaceEngineService {
         poolConfig.setMaxTotal(threadPoolSize);
         poolConfig.setMinIdle(threadPoolSize);
         poolConfig.setLifo(false);
-        extractFaceObjectPool = new GenericObjectPool(new FaceEngineFactory(appId, sdkKey), poolConfig);//底层库算法对象池
-        compareFaceObjectPool = new GenericObjectPool(new FaceEngineFactory(appId, sdkKey), poolConfig);//底层库算法对象池
+        extractFaceObjectPool = new GenericObjectPool(new FaceEngineFactory(appId, sdkKey, FunctionConfiguration.builder().supportFaceDetect(true).supportFaceRecognition(true).supportAge(true).supportGender(true).build()), poolConfig);//底层库算法对象池
+        compareFaceObjectPool = new GenericObjectPool(new FaceEngineFactory(appId, sdkKey, FunctionConfiguration.builder().supportFaceRecognition(true).build()), poolConfig);//底层库算法对象池
+
     }
 
-    /**f
+    /**
      * 初始化缓存
      */
     private void initCache() {
@@ -85,54 +85,62 @@ public class FaceEngineServiceImpl implements FaceEngineService {
                 .build(new CacheLoader<Integer, List<FaceInfo>>() {
                     @Override
                     public List<FaceInfo> load(Integer groupId) {
-                        List<FaceInfo> faceInfos =faceInfoService.getAll();
+                        List<FaceInfo> faceInfos = faceInfoDao.findByGroupId(groupId.longValue());
                         return faceInfos;
                     }
                 });
     }
 
-    public void addFaceToCache(Integer groupId, FaceInfo faceUserInfo) throws ExecutionException {
-        List<FaceInfo> userFaceInfoList = faceGroupCache.get(groupId);
-        userFaceInfoList.add(faceUserInfo);
+
+    private int plusHundred(Float value) {
+        BigDecimal target = new BigDecimal(value);
+        BigDecimal hundred = new BigDecimal(100f);
+        return target.multiply(hundred).intValue();
+
     }
 
-    /**
-     * 识别图中人脸
-     * @param imageBuf
-     * @return
-     */
     @Override
-    public List<FaceInfo> detectFaces(BufferedImage imageBuf) {
-        List<FaceInfo> faces = new ArrayList<>();
+    public void addFaceToCache(Integer groupId, FaceInfo faceInfo) throws ExecutionException {
+        List<FaceInfo> userFaceInfoList = faceGroupCache.get(groupId);
+        userFaceInfoList.add(faceInfo);
+    }
+
+
+    @Override
+    public List<FaceInfo> detectFaces(ImageInfo imageInfo){
         FaceEngine faceEngine = null;
+        List<FaceInfo> faceInfos = new ArrayList<>();
         try {
             //获取引擎对象
             faceEngine = extractFaceObjectPool.borrowObject();
-            //获取引擎对象
-            MultiFaceInfo multiFaceInfo = faceEngine.detectFaces(imageBuf);
-            for(SingleFaceInfo singleFaceInfo:multiFaceInfo.getFaces()){
+            //人脸检测得到人脸列表
+            List<com.arcsoft.face.FaceInfo> faceInfoList = new ArrayList<>();
+            //人脸检测
+            faceEngine.detectFaces(imageInfo.getRgbData(), imageInfo.getWidth(), imageInfo.getHeight(), ImageFormat.CP_PAF_BGR24, faceInfoList);
+            faceEngine.process(imageInfo.getRgbData(), imageInfo.getWidth(), imageInfo.getHeight(), ImageFormat.CP_PAF_BGR24, faceInfoList, FunctionConfiguration.builder().supportAge(true).supportGender(true).build());
+            List<GenderInfo> genderInfoList = new ArrayList<>();
+            //性别提取
+            faceEngine.getGender(genderInfoList);
+            //年龄提取
+            List<AgeInfo> ageInfoList = new ArrayList<>();
+            faceEngine.getAge(ageInfoList);
+            for (int i = 0; i <faceInfoList.size() ; i++) {
                 FaceInfo faceInfo = new FaceInfo();
-                faceInfo.setRectLeft(singleFaceInfo.faceRect.left);
-                faceInfo.setRectRight(singleFaceInfo.faceRect.right);
-                faceInfo.setRectTop(singleFaceInfo.faceRect.top);
-                faceInfo.setRectBottom(singleFaceInfo.faceRect.bottom);
-                // 3d相关信息
-                faceInfo.setFace3dRoll(singleFaceInfo.roll);
-                faceInfo.setFace3dPitch(singleFaceInfo.pitch);
-                faceInfo.setFace3dYaw(singleFaceInfo.yaw);
-                faceInfo.setFace3dStatus(singleFaceInfo.status);
-                // 年龄信息
-                faceInfo.setAge(singleFaceInfo.age);
-                faceInfo.setGender(singleFaceInfo.gender);
-                faces.add(faceInfo);
-                // 提取人脸特征
-                FaceFeature faceFeature=faceEngine.extractFeature(singleFaceInfo,imageBuf);
-                faceFeature.getFeatureData();
+                com.arcsoft.face.FaceInfo sourceFaceInfo = faceInfoList.get(i);
+                faceInfo.setAge(ageInfoList.get(i).getAge());
+                faceInfo.setGender(genderInfoList.get(i).getGender());
+                faceInfo.setRectTop(sourceFaceInfo.getRect().getTop());
+                faceInfo.setRectTop(sourceFaceInfo.getRect().getBottom());
+                faceInfo.setRectTop(sourceFaceInfo.getRect().getLeft());
+                faceInfo.setRectTop(sourceFaceInfo.getRect().getRight());
+                faceInfo.setFaceOrient(sourceFaceInfo.getOrient());
+                FaceFeature faceFeature = new FaceFeature();
+                //提取人脸特征
+                faceEngine.extractFaceFeature(imageInfo.getRgbData(), imageInfo.getWidth(), imageInfo.getHeight(), ImageFormat.CP_PAF_BGR24, faceInfoList.get(i), faceFeature);
                 faceInfo.setFaceFeature(faceFeature.getFeatureData());
                 faceInfo.setToken(DigestUtil.md5Hex(faceFeature.getFeatureData()));
-//                faceInfoService.save(faceInfo);
+                faceInfos.add(faceInfo);
             }
-            return  faces;
         } catch (Exception e) {
             logger.error("", e);
         } finally {
@@ -140,45 +148,18 @@ public class FaceEngineServiceImpl implements FaceEngineService {
                 //释放引擎对象
                 extractFaceObjectPool.returnObject(faceEngine);
             }
-
         }
+        return faceInfos;
 
-        return null;
     }
 
-    /**
-     * 人脸特征
-     * @param imageBuf
-     * @return
-     */
+
     @Override
-    public byte[] extractFaceFeature(BufferedImage imageBuf) {
-        FaceEngine faceEngine = null;
-        try {
-            //获取引擎对象
-            faceEngine = extractFaceObjectPool.borrowObject();
-
-            //人脸检测得到人脸列表
-            MultiFaceInfo multiFaceInfo = faceEngine.detectFaces(imageBuf);
-            for(SingleFaceInfo singleFaceInfo:multiFaceInfo.getFaces()){
-                FaceFeature faceFeature=faceEngine.extractFeature(singleFaceInfo,imageBuf);
-                return faceFeature.getFeatureData();
-            }
-        } catch (Exception e) {
-            logger.error("", e);
-        } finally {
-            if (faceEngine != null) {
-                //释放引擎对象
-                extractFaceObjectPool.returnObject(faceEngine);
-            }
-
-        }
-        return null;
-    }
-
     public List<FaceInfo> compareFaceFeature(byte[] faceFeature, Integer groupId) throws InterruptedException, ExecutionException {
         List<FaceInfo> resultFaceInfoList = Lists.newLinkedList();//识别到的人脸列表
-        FaceFeature targetFaceFeature = new FaceFeature(faceFeature);
+
+        FaceFeature targetFaceFeature = new FaceFeature();
+        targetFaceFeature.setFeatureData(faceFeature);
         List<FaceInfo> faceInfoList = faceGroupCache.get(groupId);//从缓存中提取人脸库
 
         List<List<FaceInfo>> faceUserInfoPartList = Lists.partition(faceInfoList, 1000);//分成1000一组，多线程处理
@@ -190,7 +171,7 @@ public class FaceEngineServiceImpl implements FaceEngineService {
             List<FaceInfo> faceUserInfoList = completionService.take().get();
             if (CollectionUtil.isNotEmpty(faceInfoList)) {
                 resultFaceInfoList.addAll(faceUserInfoList);
-        }
+            }
         }
 
         resultFaceInfoList.sort((h1, h2) -> h2.getSimilarValue().compareTo(h1.getSimilarValue()));//从大到小排序
@@ -205,24 +186,24 @@ public class FaceEngineServiceImpl implements FaceEngineService {
         private FaceFeature targetFaceFeature;
 
 
-        public CompareFaceTask(List<FaceInfo> faceUserInfoList, FaceFeature targetFaceFeature) {
-            this.faceInfoList = faceUserInfoList;
+        public CompareFaceTask(List<FaceInfo> faceInfoList, FaceFeature targetFaceFeature) {
+            this.faceInfoList = faceInfoList;
             this.targetFaceFeature = targetFaceFeature;
         }
 
         @Override
         public List<FaceInfo> call() {
-           FaceEngine faceEngine = null;
+            FaceEngine faceEngine = null;
             List<FaceInfo> resultFaceInfoList = Lists.newLinkedList();//识别到的人脸列表
             try {
                 faceEngine = compareFaceObjectPool.borrowObject();
-
-                for (FaceInfo faceInfo : faceInfoList) {
-                    FaceFeature sourceFaceFeature = new FaceFeature(faceInfo.getFaceFeature());
-                    Float faceSimilar = faceEngine.compareFeature(new FaceFeature(targetFaceFeature.getFeatureData()), sourceFaceFeature);
-                    Integer similarValue = plusHundred(faceSimilar);//获取相似值
+                for (FaceInfo faceInfo : resultFaceInfoList) {
+                    FaceFeature sourceFaceFeature = new FaceFeature();
+                    sourceFaceFeature.setFeatureData(faceInfo.getFaceFeature());
+                    FaceSimilar faceSimilar = new FaceSimilar();
+                    faceEngine.compareFaceFeature(targetFaceFeature, sourceFaceFeature, faceSimilar);
+                    Integer similarValue = plusHundred(faceSimilar.getScore());//获取相似值
                     if (similarValue > passRate) {//相似值大于配置预期，加入到识别到人脸的列表
-                        faceInfo.setSimilarValue(faceSimilar);
                         resultFaceInfoList.add(faceInfo);
                     }
                 }
@@ -238,14 +219,6 @@ public class FaceEngineServiceImpl implements FaceEngineService {
         }
 
     }
-
-    private int plusHundred(Float value) {
-        BigDecimal target = new BigDecimal(value);
-        BigDecimal hundred = new BigDecimal(100f);
-        return target.multiply(hundred).intValue();
-
-    }
-
 
 
 }

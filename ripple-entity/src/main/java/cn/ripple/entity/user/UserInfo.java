@@ -3,7 +3,6 @@ package cn.ripple.entity.user;
 
 import cn.ripple.entity.BaseEntity;
 import cn.ripple.entity.face.FaceInfo;
-import cn.ripple.entity.face.Rect;
 import cn.ripple.enums.DataStatusEnum;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -47,9 +46,6 @@ public class UserInfo extends BaseEntity {
 
     @ApiModelProperty(value = "状态 默认0正常 -1拉黑")
     private Integer status = DataStatusEnum.ENABLED.getValue();
-
-    @ApiModelProperty(value = "人脸特征")
-    private byte[] faceFeature;
 
     @ApiModelProperty(value = "人脸特征token")
     private String faceToken;

@@ -2,7 +2,7 @@ package cn.ripple.utils;
 
 
 
-import cn.ripple.entity.face.ImageInfo;
+import cn.ripple.dao.face.ImageInfo;
 
 import javax.imageio.ImageIO;
 import java.awt.color.ColorSpace;

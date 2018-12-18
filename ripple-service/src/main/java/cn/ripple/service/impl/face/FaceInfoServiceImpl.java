@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 
 /**
  * 用户接口实现
@@ -25,4 +28,5 @@ public class FaceInfoServiceImpl implements FaceInfoService {
     public FaceInfoDao getRepository() {
         return faceInfoDao;
     }
+
 }
